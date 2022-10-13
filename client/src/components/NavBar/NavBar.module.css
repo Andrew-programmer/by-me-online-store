@@ -1,0 +1,14 @@
+.logoLink{
+    color: white;
+    font-size: 1.3rem;
+    text-decoration: none;
+}
+
+.nav{
+    color: white;
+}
+
+.navButton{
+    margin-left: 0.8rem;
+    background-color: black;
+}

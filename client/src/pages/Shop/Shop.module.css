@@ -1,0 +1,10 @@
+.mainContainer{
+
+}
+
+@media screen and (max-width: 576px) {
+    .mainContainer{
+        max-width: initial!important;
+    }
+}
+
