@@ -2,9 +2,10 @@ const {Rating} = require('../models/models');
 const {getUserIdFromJWT} = require('./functions');
 
 class RatingController {
-    async create(req, res){
+    async create(req, res) {
         try {
-            const {rate} = req.body;
+            let {rate} = req.body;
+            rate = +rate;
             const {deviceId} = req.query;
             const userId = getUserIdFromJWT(req.headers.authorization);
 
@@ -17,6 +18,29 @@ class RatingController {
             res.status(200).json({rating});
         } catch (e) {
             res.status(400).json({message: 'Create rating error'});
+        }
+    }
+
+    async getAverage(req, res) {
+        try {
+            const {deviceId} = req.query;
+            const allRatings = await Rating.findAll({
+                where: {
+                    deviceId: deviceId
+                }
+            })
+            res.status(200).json({allRatings});
+        } catch (e) {
+            res.status(400).json({message: 'Get average rating error'});
+        }
+    }
+
+    async getAll(req, res){
+        try{
+            const rating = await Rating.findAll();
+            res.status(200).json({rating});
+        } catch (e){
+            res.status(400).json({message: 'Get ratings error'});
         }
     }
 
@@ -40,7 +64,9 @@ class RatingController {
 
     async update(req, res) {
         try {
-            const {rate} = req.body;
+            let {rate} = req.body;
+            rate = +rate;
+            console.log(rate);
             const {deviceId} = req.query;
             const userId = getUserIdFromJWT(req.headers.authorization);
 
@@ -55,7 +81,8 @@ class RatingController {
 
             res.status(200).json({rating})
         } catch (e) {
-            res.status(400).json({message: 'Get rating error'})
+            console.log(e);
+            res.status(400).json({message: 'Update rating error'})
         }
     }
 

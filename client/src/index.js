@@ -6,6 +6,7 @@ import TypesStore from "./store/TypesStore";
 import BrandsStore from "./store/BrandsStore";
 import DeviceStore from "./store/DeviceStore";
 import BasketDeviceStore from "./store/BasketDeviceStore";
+import RatingStore from "./store/RatingStore";
 
 export const Context = createContext(null);
 
@@ -18,7 +19,8 @@ root.render(
         type: new TypesStore(),
         brand: new BrandsStore(),
         device: new DeviceStore(),
-        basketDevices: new BasketDeviceStore()
+        basketDevices: new BasketDeviceStore(),
+        ratings: new RatingStore()
     }}>
         <App />
     </Context.Provider>

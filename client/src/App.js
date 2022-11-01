@@ -11,9 +11,10 @@ import {fetchTypes} from "./http/typeApi";
 import {fetchBrands} from "./http/brandApi";
 import {fetchDevices} from "./http/deviceApi";
 import {fetchBasketDevices} from "./http/basketDeviceApi";
+import {fetchRatings} from "./http/ratingApi";
 
 const App = observer(() => {
-    const {user, brand, type, device, basketDevices} = useContext(Context);
+    const {user, brand, type, device, basketDevices, ratings} = useContext(Context);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -33,9 +34,13 @@ const App = observer(() => {
             basketDevices.setDevices(data);
         })
 
+        fetchRatings().then((data) => {
+            ratings.setRatings(data);
+        })
+
         check().then(data => {
             debugger
-            user.setUser(true);
+            user.setUser(data);
             user.setIsAuth(true);
         }).finally(() => {
             setLoading(false);

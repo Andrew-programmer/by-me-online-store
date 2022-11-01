@@ -12,16 +12,16 @@ class BasketDeviceController {
                 }
             })
 
-            if(!candidate){
+            if (!candidate) {
                 const basketDevice = await BasketDevice.create({
                     deviceId,
-                    basketId: userId
+                    basketId: userId,
                 })
 
                 return res.status(200).json({basketDevice});
             }
 
-            res.status(400).json('Already exist');
+            res.status(400).json({message: 'Already exist'});
         } catch (e) {
             res.status(400).json({message: 'Creation error'})
         }
@@ -77,6 +77,54 @@ class BasketDeviceController {
             res.status(200).json({message: 'Delete all successful'})
         } catch (e) {
             res.status(400).json({message: 'Delete all error'})
+        }
+    }
+
+    async addOne(req, res) {
+        try {
+            const {id} = req.query;
+            const oldBasketDevice = await BasketDevice.findOne({
+                where: {
+                    id
+                }
+            });
+            const newCount = ++oldBasketDevice.count;
+            const newBasketDevice = await BasketDevice.update({count: newCount}, {
+                where: {
+                    id
+                }
+            })
+
+            return res.status(200).json({newBasketDevice});
+
+        } catch (e) {
+            console.log(e)
+            res.status(400).json({message: 'Add one all error'})
+        }
+    }
+
+    async removeOne(req, res) {
+        try {
+            const {id} = req.query;
+            const oldBasketDevice = await BasketDevice.findOne({
+                where: {
+                    id
+                }
+            });
+            if (oldBasketDevice.count > 1) {
+                const newCount = --oldBasketDevice.count;
+                const newBasketDevice = await BasketDevice.update({count: newCount}, {
+                    where: {
+                        id
+                    }
+                })
+
+                return res.status(200).json({newBasketDevice});
+            }
+
+            return res.status(400).json({message: 'Value can not be 0'})
+        } catch (e) {
+            res.status(400).json({message: 'Add one all error'})
         }
     }
 }

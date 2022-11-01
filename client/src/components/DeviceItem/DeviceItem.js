@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Button, ButtonGroup, Card, Image} from "react-bootstrap";
 import star from '../../assets/star.png'
 import {DEVICE_ROUTE} from "../../utils/consts";
@@ -8,18 +8,13 @@ import styles from './DeviceItem.module.css'
 import {useNavigate} from "react-router-dom";
 import {API_URL} from "../../urls";
 import {Context} from "../../index";
-import {removeBasketDevice} from "../../http/basketDeviceApi";
+import {addCountBasketDevice, removeBasketDevice, removeCountBasketDevice} from "../../http/basketDeviceApi";
+import {check} from "../../http/userApi";
 
-const DeviceItem = ({device, inBasket = false}) => {
-    const {brand, basketDevices} = useContext(Context);
+const DeviceItem = ({device, inBasket = false, basketDevice, handleAdd, handleDelete, handleRemove}) => {
+    const {brand} = useContext(Context);
 
-    const handleDeleteClick = async (deviceId) => {
-        
-        removeBasketDevice(deviceId).then((data) => {
-                console.log(data);
-            }
-        )
-    }
+
 
     const navigate = useNavigate()
     return (
@@ -40,14 +35,20 @@ const DeviceItem = ({device, inBasket = false}) => {
                 inBasket ?
                     <div className={styles.countActions}>
                         <ButtonGroup aria-label={'Count actions'}>
-                            <Button variant={"dark"} sx={{
-                                width: 10,
-                                height: 10
-                            }}>-</Button>
-                            <span className={styles.count + ' bg-dark'}>{1}</span>
-                            <Button variant={"dark"} bg={"black"}>+</Button>
+                            <Button
+                                variant={"dark"}
+                                sx={{
+                                    width: 10,
+                                    height: 10
+                                }}
+                                onClick={(event) => handleRemove(event, basketDevice.id, basketDevice.count)}
+                            >-</Button>
+                            <span className={styles.count + ' bg-dark'}>{basketDevice.count}</span>
+                            <Button variant={"dark"} bg={"black"}
+                                    onClick={(event) => handleAdd(event, basketDevice.id)}>+</Button>
                         </ButtonGroup>
-                        <Button variant={"outline-danger"} onClick={() => handleDeleteClick(device.id)}
+                        <Button variant={"outline-danger"}
+                                onClick={(event) => handleDelete(event, basketDevice.id)}
                                 className={styles.deleteButton}><AiFillDelete/></Button>
                     </div>
                     : ''

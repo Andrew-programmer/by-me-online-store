@@ -1,5 +1,5 @@
 import {$authHost} from "./index";
-import {BASKET_DEVICE} from "../urls";
+import {ADD_COUNT_BASKET_DEVICE, BASKET_DEVICE, REMOVE_COUNT_BASKET_DEVICE} from "../urls";
 
 const deleteAll = '/all';
 
@@ -18,10 +18,30 @@ export const createBasketDevice = async (deviceId) => {
     return data;
 }
 
-export const removeBasketDevice = async (deviceId) => {
+export const removeBasketDevice = async (id) => {
     const {data} = await $authHost.delete(BASKET_DEVICE,  {
         params: {
-            id: deviceId
+            id
+        }
+    })
+
+    return data;
+}
+
+export const addCountBasketDevice = async (id) => {
+    const {data} = await $authHost.put(BASKET_DEVICE + ADD_COUNT_BASKET_DEVICE, null, {
+        params: {
+            id
+        }
+    })
+
+    return data;
+}
+
+export const removeCountBasketDevice = async (id) => {
+    const {data} = await $authHost.put(BASKET_DEVICE + REMOVE_COUNT_BASKET_DEVICE, null, {
+        params: {
+            id
         }
     })
 

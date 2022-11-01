@@ -1,0 +1,13 @@
+Используется:
+
+	Сервер:
+		1. node.js
+		2. express
+		3. sequelize
+		4. postgreSQL (pg, pg-hstore)
+		5. REST Api
+
+	Клиент:
+	    1.
+
+PERN (PostgreSQL + express + React + node.js)

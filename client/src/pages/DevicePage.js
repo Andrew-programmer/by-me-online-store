@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Image, Row} from "react-bootstrap";
 import bigStar from '../assets/bigStar.png'
 import 'antd/dist/antd.css'
@@ -8,15 +8,35 @@ import {createBasketDevice} from "../http/basketDeviceApi";
 import {useParams} from "react-router-dom";
 import {fetchOneDevice} from "../http/deviceApi";
 import {API_URL} from "../urls";
-import StarRating from "../components/StarRating/StarRating";
 import {Rate} from "antd";
+import {Context} from "../index";
+import {fetchRatings, setRating, updateRating} from "../http/ratingApi";
 
 const DevicePage = () => {
+    const {ratings, user} = useContext(Context);
     const [device, setDevice] = useState({info: []});
     const {id} = useParams();
+    const [defaultValue, setDefaultValue] = useState(() => setDefaultRating(user.user.id, id));
 
     const handleBasketClick = async () => {
         await createBasketDevice(id);
+    }
+
+    const handleSetRating = async (event, deviceId, userId) => {
+        debugger
+        if(ratings.check(userId, +deviceId)){
+            await setRating(+event, +deviceId);
+        } else {
+            await updateRating(+event, +deviceId);
+        }
+    }
+
+    function setDefaultRating(userId, deviceId){
+        return ratings.getByUser(userId, +deviceId)
+    }
+
+    const setDeviceRating = (deviceId) => {
+        return ratings.getAverage(+deviceId);
     }
 
     useEffect(() => {
@@ -24,6 +44,7 @@ const DevicePage = () => {
             setDevice(data);
         })
     }, [])
+
     return (
         <Container className='mt-3'>
             <Row>
@@ -44,7 +65,7 @@ const DevicePage = () => {
                                 fontSize: 40
                             }}
                         >
-                            {device.rating}
+                            {setDeviceRating(device.id)}
                         </div>
                     </Row>
                 </Col>
@@ -59,7 +80,7 @@ const DevicePage = () => {
                         }}
                     >
                         <h3>From: {device.price}$</h3>
-                        <Rate allowHalf defaultValue={device.rating}/>
+                        <Rate defaultValue={defaultValue} onChange={event => handleSetRating(event, id, user.user.id)}/>
                         <Button variant={"outline-secondary"} onClick={handleBasketClick}>To basket</Button>
                     </Card>
                 </Col>
